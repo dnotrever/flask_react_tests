@@ -1,0 +1,9 @@
+.vscode/
+.DS_Store
+node_modules/
+dist/
+.env
+backend/**
+!backend/requirements.txt
+frontend/**
+!frontend/.gitkeep

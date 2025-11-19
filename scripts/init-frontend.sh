@@ -1,26 +1,46 @@
 #!/usr/bin/env bash
 
+echo ""
 trap 'echo ""; echo "ERRO NA LINHA $LINENO"; echo "Comando: $BASH_COMMAND"; echo "Código: $?"; echo ""; read -p "Pressione Enter para sair..." dummy; exit 1' ERR
 set -euo pipefail
 
 cd /app/frontend
 
 if [ -f "package.json" ]; then
-  echo "[init] frontend já existe."
+  echo "Frontend já existe."
   read -p "Pressione Enter para sair..." dummy
   exit 1
 fi
 
-echo "[init] Criando projeto React + TS + Vite..."
-echo ""
+echo "Criando projeto React + TS + Vite..."
 
-echo -e "n\nn\n" | npm create vite@latest . -- --template react-ts
+cd /tmp
+rm -rf vite-tmp 2>/dev/null || true
 
-echo ""
+yes "n" | npm create vite@latest vite-tmp -- --template react-ts 2>/dev/null || true
+
+if [ ! -f "/tmp/vite-tmp/package.json" ]; then
+  echo "Falha ao criar projeto Vite"
+  exit 1
+fi
+
+if [ -f "/app/frontend/.gitkeep" ]; then
+  cp /app/frontend/.gitkeep /tmp/.gitkeep-backup
+fi
+
+mv /tmp/vite-tmp/* /app/frontend/
+mv /tmp/vite-tmp/.* /app/frontend/ 2>/dev/null || true
+rm -rf /tmp/vite-tmp
+
+if [ -f "/tmp/.gitkeep-backup" ]; then
+  mv /tmp/.gitkeep-backup /app/frontend/.gitkeep
+fi
+
+cd /app/frontend
+
 echo "Projeto Vite criado!"
 echo ""
 echo "Instalando todas as dependências..."
-echo ""
 
 npm install
 npm install -D sass tailwindcss @tailwindcss/vite
@@ -71,11 +91,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 )
 EOF
 
-echo ""
 echo "Frontend criado com sucesso!"
 echo ""
-echo "Para iniciar o servidor de desenvolvimento:"
-echo "   cd /app/frontend"
-echo "   npm run dev -- --host 0.0.0.0 --port 5173"
+echo "Para iniciar o servidor:"
+echo "   cd /app/frontend && npm run dev -- --host 0.0.0.0 --port 5173"
 echo ""
 read -p "Pressione Enter para sair..." dummy
+echo ""

@@ -1,5 +1,8 @@
 .vscode/
+
 backend/**
 !backend/requirements.txt
-frontend/**
-!frontend/.gitkeep
+
+
+# frontend/**
+# !frontend/.gitkeep

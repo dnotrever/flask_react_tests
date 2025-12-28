@@ -1,25 +1,20 @@
 services:
-  app:
-    build:
-      context: .
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
-    container_name: flask-react-dev
-    working_dir: /app
-    environment:
-      - HOME=/home/appuser
-    volumes:
-      - ./backend:/app/backend
-      - ./frontend:/app/frontend
-      - ./scripts:/app/scripts
-      - ./.git:/app/.git
-      - ./.gitignore:/app/.gitignore
-      - ./Dockerfile:/app/Dockerfile
-      - ./docker-compose.yml:/app/docker-compose.yml
-      - vscode_data:/app/.vscode
-      - ${HOME}/.ssh:/home/appuser/.ssh:ro
-      - ${HOME}/.gitconfig:/tmp/gitconfig-host:ro
-    command: tail -f /dev/null
+    app:
+        build:
+            context: .
+            args:
+                UID: ${UID:-1000}
+                GID: ${GID:-1000}
+        container_name: flask-react-dev
+        working_dir: /app
+        environment:
+            - HOME=/home/appuser
+        volumes:
+            - .:/app
+            - /app/node_modules
+            - vscode_data:/app/.vscode
+            - ${HOME}/.ssh:/home/appuser/.ssh:ro
+            - ${HOME}/.gitconfig:/tmp/gitconfig-host:ro
+        command: tail -f /dev/null
 volumes:
-  vscode_data:
+    vscode_data:

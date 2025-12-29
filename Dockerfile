@@ -34,10 +34,6 @@ COPY . /app
 COPY frontend/package.json frontend/package-lock.json*
 RUN cd frontend && npm install --no-audit --no-fund
 
-# Copy and set permissions for entrypoint script
-COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
 # Set ownership and permissions
 RUN chown -R appuser:appuser /app && \
     chmod +x /app/scripts/*.sh
